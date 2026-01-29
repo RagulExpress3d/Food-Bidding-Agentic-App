@@ -29,31 +29,43 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
             <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">The Objective</label>
             <input 
               type="text"
-              className="w-full p-4 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-bold text-sm transition-all"
+              className="w-full h-[58px] p-4 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-bold text-sm transition-all placeholder:text-dd-muted/50"
               placeholder="What are we eating? (e.g. Sushi)"
               value={formData.itemPref}
               onChange={e => setFormData({ ...formData, itemPref: e.target.value })}
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Squad Size</label>
-            <input 
-              type="number"
-              min="1"
-              className="w-full p-4 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-black text-sm text-center transition-all"
-              value={formData.quantity}
-              onChange={e => setFormData({ ...formData, quantity: Math.max(1, Number(e.target.value)) })}
-            />
+            <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest text-center">Squad Size</label>
+            <div className="flex items-center justify-between bg-dd-light rounded-2xl h-[58px] px-1 overflow-hidden border-2 border-transparent focus-within:border-dd-orange/20 focus-within:bg-white transition-all">
+              <button 
+                type="button"
+                onClick={() => setFormData({ ...formData, quantity: Math.max(1, formData.quantity - 1) })}
+                className="w-10 h-10 flex items-center justify-center text-dd-muted hover:text-dd-orange hover:bg-white rounded-xl active:scale-90 transition-all"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/></svg>
+              </button>
+              <span className="flex-1 text-center font-black text-sm text-dd-dark select-none">
+                {formData.quantity}
+              </span>
+              <button 
+                type="button"
+                onClick={() => setFormData({ ...formData, quantity: formData.quantity + 1 })}
+                className="w-10 h-10 flex items-center justify-center text-dd-muted hover:text-dd-orange hover:bg-white rounded-xl active:scale-90 transition-all"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Unit Budget Cap</label>
+          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Price</label>
           <div className="relative">
             <span className="absolute left-5 top-1/2 -translate-y-1/2 font-black text-dd-orange">$</span>
             <input 
               type="number"
-              className="w-full p-4 pl-10 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-black text-sm transition-all"
+              className="w-full p-4 pl-10 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-black text-sm transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               value={formData.budgetCap}
               onChange={e => setFormData({ ...formData, budgetCap: Number(e.target.value) })}
             />

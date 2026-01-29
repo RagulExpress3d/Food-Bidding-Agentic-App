@@ -6,11 +6,36 @@ interface Props {
   orders: Order[];
 }
 
+const getAgentTheme = (name: string) => {
+  const n = name.toLowerCase();
+  if (n.includes('pizza') || n.includes('regina') || n.includes('domino')) {
+    return { emoji: '🍕', accent: 'text-red-600', bg: 'bg-dd-orange' };
+  }
+  if (n.includes('sea') || n.includes('oyster') || n.includes('fish') || n.includes('legal') || n.includes('catch') || n.includes('lobster')) {
+    return { emoji: '🦞', accent: 'text-cyan-700', bg: 'bg-cyan-600' };
+  }
+  if (n.includes('burger') || n.includes('mcdonald') || n.includes('wendy') || n.includes('king') || n.includes('tasty')) {
+    return { emoji: '🍔', accent: 'text-amber-800', bg: 'bg-amber-600' };
+  }
+  if (n.includes('taqueria') || n.includes('taco') || n.includes('chipotle') || n.includes('mexican') || n.includes('burrito') || n.includes('anna') || n.includes('pelón')) {
+    return { emoji: '🌮', accent: 'text-emerald-700', bg: 'bg-emerald-600' };
+  }
+  if (n.includes('dunkin') || n.includes('starbucks') || n.includes('flour') || n.includes('coffee')) {
+    return { emoji: '🍩', accent: 'text-stone-700', bg: 'bg-stone-600' };
+  }
+  return { emoji: '🍱', accent: 'text-dd-orange', bg: 'bg-dd-orange' };
+};
+
 const Tracking: React.FC<Props> = ({ orders }) => {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orders.length > 0 ? orders[0].id : null);
   const [etaOffsets, setEtaOffsets] = useState<Record<string, number>>({});
   const [progressStates, setProgressStates] = useState<Record<string, number>>({});
-  const [showToast, setShowToast] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [isOfferClaimed, setIsOfferClaimed] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [isOfferExpired, setIsOfferExpired] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [addedPrice, setAddedPrice] = useState(0);
 
   useEffect(() => {
     const newEtaOffsets = { ...etaOffsets };
@@ -38,50 +63,68 @@ const Tracking: React.FC<Props> = ({ orders }) => {
         return next;
       });
     }, 10000);
-    return () => clearInterval(timer);
+
+    // Initial delay for notification
+    const notifyTimer = setTimeout(() => setShowNotification(true), 1500);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(notifyTimer);
+    };
   }, [orders]);
 
-  if (orders.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[70vh] text-center p-12">
-        <div className="w-24 h-24 bg-dd-light rounded-full flex items-center justify-center mb-6 text-dd-muted border-4 border-dashed border-dd-muted/20">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <h2 className="text-3xl font-black uppercase tracking-tighter italic text-dd-dark">No Active Status</h2>
-        <p className="text-dd-muted font-bold text-xs mt-3 uppercase tracking-widest leading-loose">Initialize a MunchMatch order to see real-time updates.</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (showNotification && timeLeft > 0 && !isOfferClaimed) {
+      const timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            setIsOfferExpired(true);
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [showNotification, isOfferClaimed]);
+
+  if (orders.length === 0) return null;
 
   const activeOrder = orders.find(o => o.id === selectedOrderId) || orders[0];
   const progress = progressStates[activeOrder.id] || 1;
   const eta = etaOffsets[activeOrder.id] || 15;
+  const theme = getAgentTheme(activeOrder.bid.agentName);
+  const upsellPrice = 5.95; // Simulated upsell cost
 
-  const handleClaimBonus = () => {
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+  const handleClaimOffer = () => {
+    setIsOfferClaimed(true);
+    setAddedPrice(upsellPrice);
+    // Auto close notification after claim
+    setTimeout(() => setShowNotification(false), 2000);
   };
 
-  return (
-    <div className="animate-in fade-in duration-700 relative pb-10">
-      {showToast && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-top-6 duration-300">
-          <div className="bg-emerald-600 text-white px-8 py-4 rounded-[1.5rem] shadow-2xl flex items-center gap-3">
-            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            </div>
-            <span className="text-xs font-black uppercase tracking-widest">Bonus Activated</span>
-          </div>
-        </div>
-      )}
+  const handlePass = () => {
+    setShowNotification(false);
+  };
 
+  const totalWithUpsell = activeOrder.total + addedPrice;
+
+  return (
+    <div className="animate-in fade-in duration-700 relative pb-32">
       {/* Order Selector */}
       {orders.length > 1 && (
         <div className="flex gap-4 overflow-x-auto p-6 scrollbar-hide bg-white border-b sticky top-0 z-40">
           {orders.map(order => (
             <button
               key={order.id}
-              onClick={() => setSelectedOrderId(order.id)}
+              onClick={() => {
+                setSelectedOrderId(order.id);
+                setAddedPrice(0);
+                setIsOfferClaimed(false);
+                setTimeLeft(60);
+                setIsOfferExpired(false);
+              }}
               className={`flex-none px-6 py-3 rounded-full text-[10px] font-black uppercase border-2 transition-all active:scale-95 ${
                 selectedOrderId === order.id 
                 ? 'bg-dd-orange border-dd-orange text-white shadow-xl shadow-dd-orange/20' 
@@ -97,7 +140,7 @@ const Tracking: React.FC<Props> = ({ orders }) => {
       <div className="p-6">
         <div className="text-center mb-10">
           <div className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase mb-3 tracking-[0.2em]">
-            MATCH CONFIRMED: {activeOrder.bid.agentName}
+            TOTAL: ${totalWithUpsell.toFixed(2)}
           </div>
           <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark italic">ORDER FEED</h2>
           <p className="text-[10px] font-black text-dd-muted uppercase font-bold mt-1 tracking-widest">ORDER ID: {activeOrder.id}</p>
@@ -129,9 +172,9 @@ const Tracking: React.FC<Props> = ({ orders }) => {
             <div className="flex items-center justify-between mb-10 px-4">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white font-black text-xl border-2 border-white/5">
-                   {activeOrder.bid.agentName.charAt(0)}
+                   {theme.emoji}
                 </div>
-                <div className="text-[9px] font-black text-white/60 uppercase tracking-widest">{activeOrder.bid.agentName}</div>
+                <div className="text-[9px] font-black text-white/60 uppercase tracking-widest truncate max-w-[60px]">{activeOrder.bid.agentName}</div>
               </div>
 
               <div className="flex-1 flex flex-col items-center gap-3 px-6">
@@ -165,31 +208,78 @@ const Tracking: React.FC<Props> = ({ orders }) => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Agent Info */}
-          <div className="bg-dd-orange p-8 rounded-[3rem] relative overflow-hidden group shadow-2xl shadow-dd-orange/20 border-4 border-white">
-            <div className="absolute top-8 right-8 opacity-10 group-hover:scale-125 transition-transform group-hover:opacity-20">
-              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      {/* Floating Agent Notification UI */}
+      <div className="fixed bottom-32 right-6 z-[100] flex flex-col items-end gap-4 pointer-events-none">
+        {showNotification && !isChatOpen && (
+          <div className="bg-dd-orange p-6 rounded-[2.5rem] w-80 shadow-[0_20px_60px_rgba(255,48,8,0.4)] border-4 border-white animate-in slide-in-from-bottom-10 duration-500 pointer-events-auto relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4">
+               <button onClick={handlePass} className="text-white/40 hover:text-white transition-colors">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+               </button>
             </div>
-            <div className="flex items-center gap-4 mb-6">
-               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-lg text-dd-orange font-black shadow-xl">
-                  {activeOrder.bid.agentName.charAt(0)}
+            
+            <div className="flex items-center gap-3 mb-4">
+               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow-lg ring-4 ring-white/20">
+                  {theme.emoji}
                </div>
-               <span className="text-xs font-black uppercase text-white tracking-[0.2em] leading-none">Agent Intelligence</span>
+               <div>
+                 <span className="text-[10px] font-black uppercase text-white tracking-[0.2em] leading-none block">{activeOrder.bid.agentName}</span>
+                 <span className="text-[8px] font-bold text-white/60 uppercase tracking-widest">Direct Line</span>
+               </div>
             </div>
-            <p className="text-xl font-bold text-white leading-tight mb-8 italic">
+
+            <p className="text-sm font-bold text-white leading-snug mb-5 italic">
               "{activeOrder.bid.expertTip}"
             </p>
-            <div className="flex gap-4">
-              <button 
-                onClick={handleClaimBonus}
-                className="flex-1 bg-dd-dark text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all hover:bg-black"
-              >
-                Claim {activeOrder.bid.bonusOffer || 'Reward'}
-              </button>
-            </div>
+
+            {isOfferClaimed ? (
+              <div className="bg-white/10 border border-white/20 p-3 rounded-2xl flex items-center gap-3 animate-in zoom-in-95">
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3008" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </div>
+                <span className="text-[10px] font-black text-white uppercase tracking-widest">Item Added to Order</span>
+              </div>
+            ) : isOfferExpired ? (
+              <div className="text-[10px] font-black text-white/40 uppercase tracking-widest text-center py-2">Offer Expired</div>
+            ) : (
+              <div className="space-y-3">
+                <button 
+                  onClick={handleClaimOffer}
+                  className="w-full bg-dd-dark text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all hover:bg-black group-hover:bg-black flex flex-col items-center"
+                >
+                  <span className="block mb-0.5">CLAIM {activeOrder.bid.bonusOffer || 'REWARD'}</span>
+                  <span className="text-[8px] text-white/50">ONLY +${upsellPrice.toFixed(2)}</span>
+                </button>
+                <div className="flex items-center justify-center gap-2">
+                   <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-white transition-all duration-1000 ease-linear" style={{ width: `${(timeLeft / 60) * 100}%` }}></div>
+                   </div>
+                   <span className="text-[9px] font-black text-white tabular-nums tracking-widest">{timeLeft}s</span>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Agent Bubble Button */}
+        <button 
+          onClick={() => setShowNotification(!showNotification)}
+          className={`pointer-events-auto w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl transition-all active:scale-90 border-4 border-white group relative ${
+            showNotification ? 'bg-dd-dark ring-dd-orange/20 ring-8' : 'bg-dd-orange ring-dd-orange/20 ring-4 animate-battle'
+          }`}
+        >
+          {showNotification ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          ) : (
+            <span>{theme.emoji}</span>
+          )}
+          {!showNotification && !isOfferExpired && !isOfferClaimed && (
+             <span className="absolute -top-1 -right-1 w-5 h-5 bg-dd-dark text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white">1</span>
+          )}
+        </button>
       </div>
     </div>
   );

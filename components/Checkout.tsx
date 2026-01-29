@@ -11,11 +11,7 @@ interface Props {
 
 const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [address, setAddress] = useState('');
-
-  const handleAutofill = () => {
-    setAddress('700 Boylston St, Boston Public Library, Boston, MA 02116');
-  };
+  const [address, setAddress] = useState('700 Boylston St, Boston Public Library, Boston, MA 02116');
 
   const handlePay = () => {
     setIsProcessing(true);
@@ -26,7 +22,8 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
 
   const unitPrice = bid.bidPrice;
   const quantity = constraints.quantity || 1;
-  const subtotal = unitPrice * quantity;
+  const durationMultiplier = constraints.duration === 'single' ? 1 : parseInt(constraints.duration);
+  const subtotal = unitPrice * quantity * durationMultiplier;
   const taxes = subtotal * 0.07;
   const total = subtotal + taxes;
 
@@ -63,8 +60,10 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
               <span className="text-xs font-medium text-dd-muted block leading-snug">{bid.offer}</span>
             </div>
             <div className="text-right">
-              <span className="text-xl font-black block tracking-tight text-dd-dark">${subtotal.toFixed(2)}</span>
-              <span className="text-[10px] text-dd-muted font-black block uppercase tracking-tighter">{quantity}X @ ${unitPrice.toFixed(2)}</span>
+              <span className="text-xl font-black block tracking-tight text-dd-dark">${subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <span className="text-[10px] text-dd-muted font-black block uppercase tracking-tighter whitespace-nowrap">
+                {quantity}X {constraints.duration !== 'single' ? `Daily x ${constraints.duration} Days` : ''} @ ${unitPrice.toFixed(2)}
+              </span>
             </div>
           </div>
           
@@ -75,14 +74,14 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
             </div>
             <div className="flex justify-between items-center text-xs font-bold text-dd-muted">
               <span className="uppercase tracking-widest font-black">Local Tax (7%)</span>
-              <span className="font-black text-dd-dark">${taxes.toFixed(2)}</span>
+              <span className="font-black text-dd-dark">${taxes.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
           </div>
         </div>
         
         <div className="flex justify-between items-center pt-6 border-t-2 border-dd-dark border-dashed">
           <span className="text-xl font-black uppercase tracking-tighter text-dd-dark">Final Total</span>
-          <span className="text-4xl font-black text-dd-orange tracking-tighter">${total.toFixed(2)}</span>
+          <span className="text-4xl font-black text-dd-orange tracking-tighter">${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
       </div>
 
@@ -90,7 +89,6 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
         <div>
           <div className="flex justify-between items-center mb-3">
             <label className="text-[10px] font-black uppercase text-dd-muted tracking-[0.2em]">Drop-Off Address</label>
-            <button onClick={handleAutofill} className="text-[11px] font-black text-dd-orange uppercase tracking-widest border-b-2 border-dd-orange">Autofill Address</button>
           </div>
           <textarea 
             className="w-full p-5 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-[1.5rem] outline-none text-sm font-bold transition-all placeholder:text-dd-muted"
@@ -132,7 +130,7 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
           address ? 'bg-dd-orange text-white shadow-dd-orange/30 active:scale-[0.97] hover:bg-dd-dark' : 'bg-dd-light text-dd-muted grayscale'
         }`}
       >
-        Confirm Deal & Pay ${total.toFixed(2)}
+        Confirm Deal & Pay ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       </button>
     </div>
   );
