@@ -22,12 +22,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 pb-10">
-      <div className="text-center">
-        <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark italic">Active <span className="text-dd-orange text-5xl">Intel</span></h2>
-        <p className="text-xs font-bold text-dd-muted uppercase tracking-widest mt-2">Setting the parameters for MunchMatch</p>
-      </div>
-
+    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 pb-10 pt-4">
       <div className="space-y-6">
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
