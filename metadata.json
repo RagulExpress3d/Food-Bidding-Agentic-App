@@ -1,0 +1,5 @@
+{
+  "name": "FeastBid Boston",
+  "description": "A reverse-auction food delivery platform for Boston, featuring real-world brands and localized bidding logic.",
+  "requestFramePermissions": []
+}
