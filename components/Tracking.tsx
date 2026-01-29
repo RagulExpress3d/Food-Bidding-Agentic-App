@@ -47,8 +47,8 @@ const Tracking: React.FC<Props> = ({ orders }) => {
         <div className="w-24 h-24 bg-dd-light rounded-full flex items-center justify-center mb-6 text-dd-muted border-4 border-dashed border-dd-muted/20">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <h2 className="text-3xl font-black uppercase tracking-tighter italic">Intel Blackout</h2>
-        <p className="text-dd-muted font-bold text-xs mt-3 uppercase tracking-widest leading-loose">Launch a Grub War to start the tracking sequence.</p>
+        <h2 className="text-3xl font-black uppercase tracking-tighter italic text-dd-dark">No Active Status</h2>
+        <p className="text-dd-muted font-bold text-xs mt-3 uppercase tracking-widest leading-loose">Initialize a MunchMatch order to see real-time updates.</p>
       </div>
     );
   }
@@ -75,7 +75,7 @@ const Tracking: React.FC<Props> = ({ orders }) => {
         </div>
       )}
 
-      {/* Arena Selector */}
+      {/* Order Selector */}
       {orders.length > 1 && (
         <div className="flex gap-4 overflow-x-auto p-6 scrollbar-hide bg-white border-b sticky top-0 z-40">
           {orders.map(order => (
@@ -97,14 +97,14 @@ const Tracking: React.FC<Props> = ({ orders }) => {
       <div className="p-6">
         <div className="text-center mb-10">
           <div className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase mb-3 tracking-[0.2em]">
-            VICTORY SECURED: {activeOrder.bid.agentName}
+            MATCH CONFIRMED: {activeOrder.bid.agentName}
           </div>
-          <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark italic">TACTICAL FEED</h2>
-          <p className="text-[10px] font-black text-dd-muted uppercase font-bold mt-1 tracking-widest">REF ID: {activeOrder.id}</p>
+          <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark italic">ORDER FEED</h2>
+          <p className="text-[10px] font-black text-dd-muted uppercase font-bold mt-1 tracking-widest">ORDER ID: {activeOrder.id}</p>
         </div>
 
         <div className="space-y-10">
-          {/* Status Intel */}
+          {/* Status Tracker */}
           <div className="relative pl-12 space-y-12">
             <div className="absolute left-3 top-0 bottom-0 w-2 bg-dd-light rounded-full"></div>
             <div className="absolute left-3 top-0 w-2 bg-dd-orange rounded-full transition-all duration-1000 ease-out" style={{ height: `${(progress / 4) * 100}%` }}></div>
@@ -121,10 +121,10 @@ const Tracking: React.FC<Props> = ({ orders }) => {
             ))}
           </div>
 
-          {/* Logistics Feed */}
+          {/* Logistics View */}
           <div className="bg-dd-dark p-8 rounded-[3rem] text-center shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-dd-orange to-transparent"></div>
-            <h3 className="text-[10px] font-black uppercase text-white/40 mb-8 tracking-[0.4em]">War Zone Logistics</h3>
+            <h3 className="text-[10px] font-black uppercase text-white/40 mb-8 tracking-[0.4em]">Logistics Status</h3>
             
             <div className="flex items-center justify-between mb-10 px-4">
               <div className="flex flex-col items-center gap-3">
@@ -143,30 +143,30 @@ const Tracking: React.FC<Props> = ({ orders }) => {
                       <span className="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] inline-block -translate-x-1/2">🛵</span>
                     </div>
                  </div>
-                 <div className="text-[9px] font-black text-dd-orange animate-pulse uppercase tracking-widest">In Motion</div>
+                 <div className="text-[9px] font-black text-dd-orange animate-pulse uppercase tracking-widest">En Route</div>
               </div>
 
               <div className="flex flex-col items-center gap-3">
                 <div className="w-16 h-16 bg-dd-orange rounded-full flex items-center justify-center text-white font-black text-xl shadow-2xl ring-4 ring-dd-orange/20">
-                   HQ
+                   You
                 </div>
-                <div className="text-[9px] font-black text-white/60 uppercase tracking-widest">Base</div>
+                <div className="text-[9px] font-black text-white/60 uppercase tracking-widest">Drop-Off</div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
               <div className="text-center">
                 <div className="text-5xl font-black text-white tracking-tighter tabular-nums">{eta}</div>
-                <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] mt-1">Mins to Drop</div>
+                <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] mt-1">Mins to Arrival</div>
               </div>
               <div className="text-center">
                 <div className="text-5xl font-black text-emerald-400 tracking-tighter">ELITE</div>
-                <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] mt-1">Driver Skill</div>
+                <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] mt-1">Delivery Skill</div>
               </div>
             </div>
           </div>
 
-          {/* Agent Hotline */}
+          {/* Agent Info */}
           <div className="bg-dd-orange p-8 rounded-[3rem] relative overflow-hidden group shadow-2xl shadow-dd-orange/20 border-4 border-white">
             <div className="absolute top-8 right-8 opacity-10 group-hover:scale-125 transition-transform group-hover:opacity-20">
               <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -175,7 +175,7 @@ const Tracking: React.FC<Props> = ({ orders }) => {
                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-lg text-dd-orange font-black shadow-xl">
                   {activeOrder.bid.agentName.charAt(0)}
                </div>
-               <span className="text-xs font-black uppercase text-white tracking-[0.2em] leading-none">Intelligence Drop</span>
+               <span className="text-xs font-black uppercase text-white tracking-[0.2em] leading-none">Agent Intelligence</span>
             </div>
             <p className="text-xl font-bold text-white leading-tight mb-8 italic">
               "{activeOrder.bid.expertTip}"

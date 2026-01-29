@@ -27,8 +27,8 @@ const BidList: React.FC<Props> = ({ bids, isLoading, onSelect, onNegotiate, onBa
           <div className="absolute -bottom-2 -right-6 w-12 h-12 bg-dd-muted rounded-full animate-pulse delay-300 shadow-xl border-2 border-white"></div>
           <div className="absolute top-1/2 -right-10 w-8 h-8 bg-emerald-500 rounded-full animate-bounce shadow-xl border-2 border-white"></div>
         </div>
-        <h3 className="font-black text-3xl uppercase tracking-tighter italic">WAR ROOM <span className="text-dd-orange">LIVE</span></h3>
-        <p className="text-dd-muted font-bold text-xs mt-3 uppercase tracking-widest">Kitchens are scrambling for your order...</p>
+        <h3 className="font-black text-3xl uppercase tracking-tighter italic">MATCH ROOM <span className="text-dd-orange">LIVE</span></h3>
+        <p className="text-dd-muted font-bold text-xs mt-3 uppercase tracking-widest">Kitchens are processing your order request...</p>
       </div>
     );
   }
@@ -37,10 +37,10 @@ const BidList: React.FC<Props> = ({ bids, isLoading, onSelect, onNegotiate, onBa
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-10 duration-700 pb-10">
       <div className="flex items-end justify-between px-2">
         <div>
-          <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark leading-none italic">THE <span className="text-dd-orange">GRUB</span> ROOM</h2>
-          <p className="text-[10px] font-black text-dd-muted uppercase tracking-[0.2em] mt-2">{bids.length} AGENTS COMPETING FOR YOUR CASH</p>
+          <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark leading-none italic">THE <span className="text-dd-orange">MATCH</span> ROOM</h2>
+          <p className="text-[10px] font-black text-dd-muted uppercase tracking-[0.2em] mt-2">{bids.length} AGENTS COMPETING FOR YOUR SELECTION</p>
         </div>
-        <button onClick={onBack} className="bg-dd-light text-dd-dark px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-widest border-2 border-transparent hover:border-dd-orange transition-all">Abort</button>
+        <button onClick={onBack} className="bg-dd-light text-dd-dark px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-widest border-2 border-transparent hover:border-dd-orange transition-all">Cancel</button>
       </div>
 
       <div className="space-y-6">
@@ -71,14 +71,14 @@ const BidList: React.FC<Props> = ({ bids, isLoading, onSelect, onNegotiate, onBa
                 <div className="text-right">
                   <div className="text-xs text-dd-muted line-through font-black opacity-50 tracking-tighter">${bid.realPrice.toFixed(2)}</div>
                   <div className="text-3xl font-black text-dd-dark tracking-tighter leading-none">${bid.bidPrice.toFixed(2)}</div>
-                  <div className="text-[8px] font-black bg-emerald-500 text-white px-2 py-1 rounded-md uppercase tracking-widest mt-2">BEST DEAL</div>
+                  <div className="text-[8px] font-black bg-emerald-500 text-white px-2 py-1 rounded-md uppercase tracking-widest mt-2">BEST MATCH</div>
                 </div>
               </div>
               
               <div className="bg-dd-light p-5 rounded-[1.5rem] mb-6">
                 <p className="text-sm font-bold text-dd-dark leading-snug mb-3 italic">"{bid.offer}"</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-black uppercase text-dd-muted tracking-widest">The Edge:</span>
+                  <span className="text-[9px] font-black uppercase text-dd-muted tracking-widest">The Advantage:</span>
                   <span className="text-[10px] font-black text-dd-orange uppercase tracking-tight">{bid.moat}</span>
                 </div>
               </div>
@@ -94,7 +94,7 @@ const BidList: React.FC<Props> = ({ bids, isLoading, onSelect, onNegotiate, onBa
                   onClick={() => onSelect(bid)}
                   className="flex-[1.5] bg-dd-orange text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-dd-orange/20 hover:bg-dd-dark transition-all active:scale-95"
                 >
-                  Accept Victory
+                  Confirm Match
                 </button>
               </div>
             </div>

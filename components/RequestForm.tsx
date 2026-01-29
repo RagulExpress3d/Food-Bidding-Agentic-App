@@ -24,8 +24,8 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 pb-10">
       <div className="text-center">
-        <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark italic">Deployment <span className="text-dd-orange text-5xl">Intel</span></h2>
-        <p className="text-xs font-bold text-dd-muted uppercase tracking-widest mt-2">Setting the parameters for the Grub War</p>
+        <h2 className="text-4xl font-black uppercase tracking-tighter text-dd-dark italic">Active <span className="text-dd-orange text-5xl">Intel</span></h2>
+        <p className="text-xs font-bold text-dd-muted uppercase tracking-widest mt-2">Setting the parameters for MunchMatch</p>
       </div>
 
       <div className="space-y-6">
@@ -35,7 +35,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
             <input 
               type="text"
               className="w-full p-4 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-bold text-sm transition-all"
-              placeholder="What are we eating? (e.g. Lobster)"
+              placeholder="What are we eating? (e.g. Sushi)"
               value={formData.itemPref}
               onChange={e => setFormData({ ...formData, itemPref: e.target.value })}
             />
@@ -66,7 +66,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Campaign Length</label>
+          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Drop Frequency</label>
           <div className="grid grid-cols-4 gap-2">
             {[
               { val: 'single', label: '1 Drop' },
@@ -91,7 +91,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Tactical Constraints</label>
+          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Dietary Preferences</label>
           <div className="flex flex-wrap gap-2">
             {dietaryOptions.map(tag => (
               <button
@@ -115,7 +115,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
         onClick={() => onSubmit(formData)}
         className="w-full bg-dd-orange text-white p-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-dd-orange/20 flex items-center justify-center gap-3 active:scale-95 transition-all hover:bg-dd-dark"
       >
-        <span>Initialize Grub War</span>
+        <span>Initialize MunchMatch</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </button>
     </div>

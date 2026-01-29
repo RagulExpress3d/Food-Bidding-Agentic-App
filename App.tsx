@@ -83,7 +83,7 @@ const App: React.FC = () => {
       const total = subtotal + taxes;
 
       const newOrder: Order = {
-        id: `#WAR-${Math.floor(Math.random() * 9000 + 1000)}`,
+        id: `#MATCH-${Math.floor(Math.random() * 9000 + 1000)}`,
         bid: { ...selectedBid },
         quantity: qty,
         unitPrice: unitPrice,
@@ -183,7 +183,7 @@ const App: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4"/><path d="M12 16V8"/></svg>
             {bids.length > 0 && step !== 'BIDDING' && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-dd-orange rounded-full border-2 border-white"></span>}
           </div>
-          <span className="text-[9px] uppercase tracking-widest">War Room</span>
+          <span className="text-[9px] uppercase tracking-widest">Match Room</span>
         </button>
         <button 
           onClick={() => navigateTo('TRACKING')}
@@ -194,7 +194,7 @@ const App: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
              {orders.length > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></span>}
           </div>
-          <span className="text-[9px] uppercase tracking-widest">Intel</span>
+          <span className="text-[9px] uppercase tracking-widest">Feed</span>
         </button>
       </footer>
     </div>

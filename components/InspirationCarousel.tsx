@@ -8,13 +8,8 @@ interface Props {
 
 const InspirationCarousel: React.FC<Props> = ({ onSelect }) => {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
-      <div className="mb-10 text-center">
-        <h2 className="text-5xl font-black text-dd-dark tracking-tighter mb-3 leading-none italic uppercase">
-          PICK YOUR <span className="text-dd-orange">WARPATH</span>
-        </h2>
-        <p className="text-dd-muted font-bold text-sm tracking-widest uppercase">Select your weapon or create a custom raid</p>
-      </div>
+    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 pt-8">
+      {/* Heading removed as requested */}
       
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-y-10 gap-x-4 mb-20">
         {/* Custom Order Bubble */}
@@ -25,7 +20,7 @@ const InspirationCarousel: React.FC<Props> = ({ onSelect }) => {
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-dd-orange border-4 border-white shadow-2xl flex items-center justify-center text-white ring-4 ring-dd-orange/10 group-hover:ring-dd-orange/30 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-dd-orange text-center leading-tight">Custom<br/>Raid</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-dd-orange text-center leading-tight">Custom<br/>Order</span>
         </button>
 
         {INSPIRATION_CATEGORIES.map((cat) => (
