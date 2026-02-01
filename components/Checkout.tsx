@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Bid, UserConstraints } from '../types';
 
 interface Props {
@@ -7,22 +7,58 @@ interface Props {
   constraints: UserConstraints;
   onSuccess: () => void;
   onBack: () => void;
+  savedAddress?: string;
 }
 
-const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
+const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack, savedAddress = '' }) => {
+  // Default mock address for demos
+  const DEFAULT_MOCK_ADDRESS = '700 Boylston St, Boston, MA 02116';
+  
   const [isProcessing, setIsProcessing] = useState(false);
-  const [address, setAddress] = useState('700 Boylston St, Boston Public Library, Boston, MA 02116');
+  const [address, setAddress] = useState(savedAddress || DEFAULT_MOCK_ADDRESS);
+  const paymentTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load address from localStorage if not provided, otherwise use mock
+  useEffect(() => {
+    if (!address || address === DEFAULT_MOCK_ADDRESS) {
+      const stored = localStorage.getItem('munchmatch_address');
+      if (stored) {
+        setAddress(stored);
+      } else if (!address) {
+        // Use mock address if nothing is stored and address is empty
+        setAddress(DEFAULT_MOCK_ADDRESS);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   const handlePay = () => {
+    // Validate address is not empty or just whitespace
+    if (!address || !address.trim()) {
+      return;
+    }
+    
+    // Save address to localStorage
+    localStorage.setItem('munchmatch_address', address.trim());
+    
     setIsProcessing(true);
-    setTimeout(() => {
+    paymentTimerRef.current = setTimeout(() => {
       onSuccess();
     }, 2500);
   };
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (paymentTimerRef.current) {
+        clearTimeout(paymentTimerRef.current);
+      }
+    };
+  }, []);
+
   const unitPrice = bid.bidPrice;
   const quantity = constraints.quantity || 1;
-  const durationMultiplier = constraints.duration === 'single' ? 1 : parseInt(constraints.duration);
+  const durationMultiplier = constraints.duration === 'single' ? 1 : parseInt(constraints.duration, 10);
   const subtotal = unitPrice * quantity * durationMultiplier;
   const taxes = subtotal * 0.07;
   const total = subtotal + taxes;
@@ -43,7 +79,7 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-right-6 duration-500 pb-10">
+    <div className="space-y-8 animate-in fade-in slide-in-from-right-6 duration-500 pb-32">
       <div className="flex items-center gap-3">
         <button onClick={onBack} className="p-3 bg-dd-light hover:bg-dd-orange hover:text-white rounded-2xl transition-all">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -93,10 +129,16 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
           <textarea 
             className="w-full p-5 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-[1.5rem] outline-none text-sm font-bold transition-all placeholder:text-dd-muted"
             rows={2}
-            placeholder="Where should we send your order?"
+            placeholder="Where should we send your order? (e.g., 700 Boylston St, Boston, MA 02116)"
             value={address}
             onChange={e => setAddress(e.target.value)}
+            onBlur={e => setAddress(e.target.value.trim())}
+            required
+            disabled={isProcessing}
           />
+          {!address && (
+            <p className="text-[9px] text-dd-muted mt-2 font-bold">Please enter a delivery address to continue</p>
+          )}
         </div>
 
         <div>
@@ -123,15 +165,20 @@ const Checkout: React.FC<Props> = ({ bid, constraints, onSuccess, onBack }) => {
         </div>
       </div>
 
-      <button 
-        disabled={!address}
-        onClick={handlePay}
-        className={`w-full p-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm transition-all shadow-2xl ${
-          address ? 'bg-dd-orange text-white shadow-dd-orange/30 active:scale-[0.97] hover:bg-dd-dark' : 'bg-dd-light text-dd-muted grayscale'
-        }`}
-      >
-        Confirm Deal & Pay ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-      </button>
+      <div className="relative z-[60]">
+        <button 
+          disabled={!address || !address.trim() || isProcessing}
+          onClick={handlePay}
+          className={`w-full p-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm transition-all shadow-2xl ${
+            address && address.trim() && !isProcessing
+              ? 'bg-dd-orange text-white shadow-dd-orange/30 active:scale-[0.97] hover:bg-dd-dark cursor-pointer' 
+              : 'bg-dd-light text-dd-muted grayscale cursor-not-allowed'
+          }`}
+          type="button"
+        >
+          {isProcessing ? 'Processing...' : `Confirm Deal & Pay $${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        </button>
+      </div>
     </div>
   );
 };

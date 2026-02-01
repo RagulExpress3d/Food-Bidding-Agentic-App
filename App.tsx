@@ -24,6 +24,16 @@ const App: React.FC = () => {
   const [selectedBid, setSelectedBid] = useState<Bid | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
+  const [bidError, setBidError] = useState<string | null>(null);
+  const [savedAddress, setSavedAddress] = useState<string>('');
+
+  // Load saved address from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('munchmatch_address');
+    if (stored) {
+      setSavedAddress(stored);
+    }
+  }, []);
 
   const handleStartWithInspiration = (pref: string) => {
     setConstraints({
@@ -40,13 +50,16 @@ const App: React.FC = () => {
 
   const handleFormSubmit = async (data: UserConstraints) => {
     setConstraints(data);
+    setBidError(null);
     setLoading(true);
     setStep('BIDDING');
     try {
       const generated = await generateBids(data);
       setBids(generated);
     } catch (error) {
-      console.error("Failed to generate bids", error);
+      const message = error instanceof Error ? error.message : String(error);
+      setBidError(message);
+      setBids([]);
     } finally {
       setLoading(false);
     }
@@ -78,7 +91,7 @@ const App: React.FC = () => {
     if (selectedBid) {
       const unitPrice = selectedBid.bidPrice;
       const qty = constraints.quantity || 1;
-      const durationMultiplier = constraints.duration === 'single' ? 1 : parseInt(constraints.duration);
+      const durationMultiplier = constraints.duration === 'single' ? 1 : parseInt(constraints.duration, 10);
       const subtotal = unitPrice * qty * durationMultiplier;
       const taxes = subtotal * 0.07;
       const total = subtotal + taxes;
@@ -107,13 +120,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-lg mx-auto bg-white shadow-[0_0_100px_rgba(0,0,0,0.05)] border-x border-dd-light relative">
+    <div className="min-h-screen flex flex-col max-w-lg mx-auto bg-white relative">
       <Header />
       
-      <main className="flex-1 overflow-y-auto pb-24">
+      <main className="flex-1 overflow-y-auto pb-24 relative z-0">
         <div className={(step === 'NEGOTIATION' || step === 'TRACKING' || step === 'INSPIRATION') ? '' : 'p-6'}>
           {step === 'INSPIRATION' && (
-            <div className="p-6">
+            <div>
                <InspirationCarousel onSelect={handleStartWithInspiration} />
             </div>
           )}
@@ -129,9 +142,11 @@ const App: React.FC = () => {
             <BidList 
               bids={bids} 
               isLoading={loading} 
+              bidError={bidError}
+              quantity={constraints.quantity}
               onSelect={handleSelectBid}
               onNegotiate={handleNegotiateBid}
-              onBack={() => setStep('FORM')}
+              onBack={() => { setBidError(null); setStep('FORM'); }}
             />
           )}
 
@@ -150,6 +165,7 @@ const App: React.FC = () => {
               constraints={constraints}
               onSuccess={handlePaymentComplete}
               onBack={() => setStep('BIDDING')}
+              savedAddress={savedAddress}
             />
           )}
 
@@ -166,7 +182,7 @@ const App: React.FC = () => {
           className={`flex flex-col items-center gap-1.5 transition-all px-4 py-2 rounded-2xl ${step === 'INSPIRATION' ? 'text-dd-orange bg-dd-orange/5 font-black scale-105' : 'text-dd-muted font-bold'}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3 1.912 5.886h6.19l-5.007 3.638 1.912 5.886L12 14.772l-5.007 3.638 1.912-5.886-5.007-3.638h6.19L12 3z"/></svg>
-          <span className="text-[9px] uppercase tracking-widest">Taste</span>
+          <span className="text-[9px] uppercase tracking-widest">Browse</span>
         </button>
         <button 
           onClick={() => navigateTo('FORM')}
@@ -195,7 +211,7 @@ const App: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 9.18 0A4 4 0 0 1 18 13.87"/><path d="M3 15h18"/><path d="M3 19h18"/></svg>
              {orders.length > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></span>}
           </div>
-          <span className="text-[9px] uppercase tracking-widest">Plate</span>
+          <span className="text-[9px] uppercase tracking-widest">Track</span>
         </button>
       </footer>
     </div>
