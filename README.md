@@ -1,7 +1,7 @@
 <img width="561" height="752" alt="image" src="https://github.com/user-attachments/assets/94f1667e-a92c-40d2-b52e-a5054ee95790" />
 
 
-Try out here in live link : https://feastbid-boston-872747958244.us-west1.run.app/
+Try out here in live link : https://food-bidding-agentic-app-872747958244.europe-west1.run.app/
 
 🍔 MunchMatch: The Reverse-Auction Food Delivery Protocol
 Stop searching. Start winning. Let the feast find you.
