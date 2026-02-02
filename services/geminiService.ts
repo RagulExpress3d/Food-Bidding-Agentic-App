@@ -2,8 +2,13 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { UserConstraints, Bid } from "../types";
 import { TIER_1_AGENTS, BOSTON_20_AGENTS } from "../constants";
 
-const getApiKey = (): string =>
-  (process.env.GEMINI_API_KEY || process.env.API_KEY || '').trim();
+const getApiKey = (): string => {
+  // Runtime: Read from window.__ENV__ (injected by Cloud Run)
+  // Development: Read from process.env (Vite)
+  const runtimeKey = (typeof window !== 'undefined' && (window as any).__ENV__?.GEMINI_API_KEY) || '';
+  const buildTimeKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+  return (runtimeKey || buildTimeKey).trim();
+};
 
 let ai: GoogleGenAI | null = null;
 function getClient(): GoogleGenAI {

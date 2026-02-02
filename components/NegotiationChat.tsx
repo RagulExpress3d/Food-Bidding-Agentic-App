@@ -43,10 +43,17 @@ const NegotiationChat: React.FC<Props> = ({ bid, constraints, onAccept, onBack }
   }, [currentDeal.price]);
 
   // Use consistent API key access pattern
-  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+  // Runtime: Read from window.__ENV__ (injected by Cloud Run)
+  // Development: Read from process.env (Vite)
+  const apiKey = useMemo(() => {
+    const runtimeKey = typeof window !== 'undefined' && (window as any).__ENV__?.GEMINI_API_KEY;
+    const buildTimeKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+    return (runtimeKey || buildTimeKey).trim();
+  }, []);
+  
   const ai = useMemo(() => {
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEY is not set. Add it to a .env or .env.local file');
+      throw new Error('GEMINI_API_KEY is not set. Add it to a .env or .env.local file (dev) or Cloud Run secrets (prod). Get a key at https://aistudio.google.com/apikey');
     }
     return new GoogleGenAI({ apiKey });
   }, [apiKey]);
