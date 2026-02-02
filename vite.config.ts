@@ -27,10 +27,8 @@ export default defineConfig(({ mode }) => {
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        // Also define window.__ENV__ for development
-        'window.__ENV__': JSON.stringify({
-          GEMINI_API_KEY: env.GEMINI_API_KEY || ''
-        })
+        // Note: window.__ENV__ is NOT defined here - it's injected at runtime by inject-env.js
+        // Defining it here would replace it at build time, preventing runtime injection
       },
       resolve: {
         alias: {

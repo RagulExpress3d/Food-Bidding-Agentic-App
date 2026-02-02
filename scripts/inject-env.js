@@ -37,10 +37,20 @@ if (fs.existsSync(htmlPath)) {
   // Inject env vars as a script tag - try multiple insertion points
   const envScript = `<script>window.__ENV__ = ${JSON.stringify(envVars)};</script>`;
   
-  // Try to insert before </head>, if not found, insert before </body>
-  if (html.includes('</head>')) {
-    html = html.replace('</head>', `${envScript}\n</head>`);
-    console.log('✅ Injected before </head>');
+  // CRITICAL: Inject BEFORE any module scripts so window.__ENV__ is available when React loads
+  // Try to insert right after <head> tag, before any scripts
+  if (html.includes('<head>')) {
+    // Find the first script tag or </head>
+    const headMatch = html.match(/<head[^>]*>([\s\S]*?)(<\/head>|<\/script>)/i);
+    if (headMatch && html.indexOf('<script') > html.indexOf('<head>')) {
+      // Insert right after <head> tag, before any scripts
+      html = html.replace(/<head[^>]*>/, `$&${envScript}\n`);
+      console.log('✅ Injected immediately after <head> (before scripts)');
+    } else {
+      // Fallback: insert before </head>
+      html = html.replace('</head>', `${envScript}\n</head>`);
+      console.log('✅ Injected before </head>');
+    }
   } else if (html.includes('</body>')) {
     html = html.replace('</body>', `${envScript}\n</body>`);
     console.log('✅ Injected before </body>');
