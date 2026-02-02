@@ -93,3 +93,72 @@ export function getFoodImage(agentName: string): string {
   // Default to first category image
   return INSPIRATION_CATEGORIES[0]?.img || '';
 }
+
+/**
+ * Get brand logo URL based on restaurant name
+ * Returns null if no logo is available (fallback to initials)
+ */
+export function getBrandLogo(agentName: string): string | null {
+  const name = agentName.toLowerCase().trim();
+  
+  // Map restaurant names to logo URLs using Clearbit Logo API (free, no API key needed)
+  const logoMap: Record<string, string> = {
+    // Fast food chains
+    "mcdonald's": 'https://logo.clearbit.com/mcdonalds.com',
+    "mcdonalds": 'https://logo.clearbit.com/mcdonalds.com',
+    "starbucks": 'https://logo.clearbit.com/starbucks.com',
+    "chick-fil-a": 'https://logo.clearbit.com/chick-fil-a.com',
+    "chickfila": 'https://logo.clearbit.com/chick-fil-a.com',
+    "taco bell": 'https://logo.clearbit.com/tacobell.com',
+    "tacobell": 'https://logo.clearbit.com/tacobell.com',
+    "wendy's": 'https://logo.clearbit.com/wendys.com',
+    "wendys": 'https://logo.clearbit.com/wendys.com',
+    "burger king": 'https://logo.clearbit.com/burgerking.com',
+    "burgerking": 'https://logo.clearbit.com/burgerking.com',
+    "dunkin'": 'https://logo.clearbit.com/dunkindonuts.com',
+    "dunkin": 'https://logo.clearbit.com/dunkindonuts.com',
+    "dunkin donuts": 'https://logo.clearbit.com/dunkindonuts.com',
+    "subway": 'https://logo.clearbit.com/subway.com',
+    "domino's": 'https://logo.clearbit.com/dominos.com',
+    "dominos": 'https://logo.clearbit.com/dominos.com',
+    "chipotle": 'https://logo.clearbit.com/chipotle.com',
+    
+    // Boston restaurants
+    "legal sea foods": 'https://logo.clearbit.com/legalseafoods.com',
+    "legal seafoods": 'https://logo.clearbit.com/legalseafoods.com',
+    "neptune oyster": null, // Local restaurant, no logo available
+    "regina pizzeria": null, // Local restaurant
+    "tasty burger": null, // Local restaurant
+    "anna's taqueria": null, // Local restaurant
+    "annas taqueria": null,
+    "flour bakery": null, // Local restaurant
+  };
+  
+  // Try exact match first
+  if (logoMap[name]) {
+    return logoMap[name];
+  }
+  
+  // Try partial matches
+  for (const [key, logo] of Object.entries(logoMap)) {
+    if (name.includes(key) || key.includes(name)) {
+      return logo;
+    }
+  }
+  
+  // Try common brand name patterns
+  if (name.includes('mcdonald')) return logoMap["mcdonald's"];
+  if (name.includes('starbuck')) return logoMap["starbucks"];
+  if (name.includes('chick') && name.includes('fil')) return logoMap["chick-fil-a"];
+  if (name.includes('taco') && name.includes('bell')) return logoMap["taco bell"];
+  if (name.includes('wendy')) return logoMap["wendy's"];
+  if (name.includes('burger') && name.includes('king')) return logoMap["burger king"];
+  if (name.includes('dunkin')) return logoMap["dunkin'"];
+  if (name.includes('subway')) return logoMap["subway"];
+  if (name.includes('domino')) return logoMap["domino's"];
+  if (name.includes('chipotle')) return logoMap["chipotle"];
+  if (name.includes('legal') && name.includes('sea')) return logoMap["legal sea foods"];
+  
+  // No logo found, return null to use initials fallback
+  return null;
+}

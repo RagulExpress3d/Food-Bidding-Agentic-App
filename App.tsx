@@ -121,7 +121,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col max-w-lg mx-auto bg-white relative">
-      <Header />
+      <Header onNavigateHome={() => navigateTo('INSPIRATION')} />
       
       <main className="flex-1 overflow-y-auto pb-24 relative z-0">
         <div className={(step === 'NEGOTIATION' || step === 'TRACKING' || step === 'INSPIRATION') ? '' : 'p-6'}>

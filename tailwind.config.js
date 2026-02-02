@@ -5,6 +5,24 @@ export default {
     "./*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
   ],
+  safelist: [
+    'bg-red-500',
+    'bg-red-600',
+    'bg-cyan-500',
+    'bg-cyan-600',
+    'bg-amber-600',
+    'bg-amber-700',
+    'bg-emerald-500',
+    'bg-emerald-600',
+    'bg-stone-600',
+    'bg-stone-700',
+    'bg-rose-500',
+    'bg-rose-600',
+    'bg-orange-500',
+    'bg-orange-600',
+    'bg-dd-orange',
+    'text-white',
+  ],
   theme: {
     extend: {
       colors: {

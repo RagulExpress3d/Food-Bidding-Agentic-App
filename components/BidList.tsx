@@ -1,9 +1,34 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { Bid } from '../types';
-import { getAgentTheme } from '../utils/agentThemes';
-import { getFoodImage, getMoatEmoji } from '../utils/bidHelpers';
+import { getAgentTheme, AgentTheme } from '../utils/agentThemes';
+import { getFoodImage, getMoatEmoji, getBrandLogo } from '../utils/bidHelpers';
 import ImageWithBlur from './ImageWithBlur';
+
+// Logo component with fallback to initials
+const RestaurantLogo: React.FC<{ agentName: string; theme: AgentTheme }> = ({ agentName, theme }) => {
+  const [logoError, setLogoError] = useState(false);
+  const logoUrl = getBrandLogo(agentName);
+  
+  if (!logoUrl || logoError) {
+    return (
+      <div className={`w-6 h-6 ${theme.buttonBg} rounded-lg flex items-center justify-center ${theme.buttonText} text-xs font-bold`}>
+        {agentName.split(' ').map(w => w[0]).join('').substring(0, 2)}
+      </div>
+    );
+  }
+  
+  return (
+    <div className="w-6 h-6 rounded-lg overflow-hidden flex items-center justify-center bg-white">
+      <img 
+        src={logoUrl} 
+        alt={agentName}
+        className="w-full h-full object-contain p-0.5"
+        onError={() => setLogoError(true)}
+      />
+    </div>
+  );
+};
 
 interface Props {
   bids: Bid[];
@@ -268,9 +293,7 @@ const BidList: React.FC<Props> = ({ bids, isLoading, bidError, quantity, onSelec
                   {/* Restaurant logo badge overlay */}
                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md rounded-xl px-2.5 py-1.5 shadow-lg border border-white/50">
                     <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 ${theme.buttonBg} rounded-lg flex items-center justify-center ${theme.buttonText} text-xs font-bold`}>
-                        {bid.agentName.split(' ').map(w => w[0]).join('').substring(0, 2)}
-                      </div>
+                      <RestaurantLogo agentName={bid.agentName} theme={theme} />
                       <span className="text-xs font-semibold text-gray-900">{bid.agentName}</span>
                     </div>
                   </div>
@@ -302,8 +325,9 @@ const BidList: React.FC<Props> = ({ bids, isLoading, bidError, quantity, onSelec
                   </div>
                   
                   {/* Action buttons - Apple-style clean */}
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 relative z-20">
                     <button 
+                      type="button"
                       onClick={() => onNegotiate(bid)}
                       className="flex-1 bg-white border border-gray-300 text-gray-700 py-3.5 rounded-2xl font-semibold text-sm hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
                     >
@@ -311,8 +335,26 @@ const BidList: React.FC<Props> = ({ bids, isLoading, bidError, quantity, onSelec
                       <span>Negotiate</span>
                     </button>
                     <button 
-                      onClick={() => onSelect(bid)}
-                      className={`flex-[1.5] ${theme.buttonBg} ${theme.buttonText} py-3.5 rounded-2xl font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2`}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onSelect(bid);
+                      }}
+                      style={{
+                        backgroundColor: theme.buttonBgColor || '#FF3008',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (theme.buttonHoverBgColor) {
+                          e.currentTarget.style.backgroundColor = theme.buttonHoverBgColor;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (theme.buttonBgColor) {
+                          e.currentTarget.style.backgroundColor = theme.buttonBgColor;
+                        }
+                      }}
+                      className={`flex-[1.5] ${theme.buttonText} py-3.5 rounded-2xl font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer`}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                       <span>Accept Deal</span>

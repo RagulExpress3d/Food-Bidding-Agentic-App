@@ -17,6 +17,8 @@ export interface AgentTheme {
   buttonBorder: string;
   buttonHoverBg: string;
   buttonText: string;
+  buttonBgColor?: string; // Hex color for inline styles
+  buttonHoverBgColor?: string; // Hex color for hover state
 }
 
 /**
@@ -42,7 +44,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-red-500',
       buttonBorder: 'border-red-600',
       buttonHoverBg: 'hover:bg-red-600',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#ef4444', // red-500
+      buttonHoverBgColor: '#dc2626' // red-600
     };
   }
   
@@ -59,7 +63,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-cyan-500',
       buttonBorder: 'border-cyan-600',
       buttonHoverBg: 'hover:bg-cyan-600',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#06b6d4', // cyan-500
+      buttonHoverBgColor: '#0891b2' // cyan-600
     };
   }
   
@@ -76,7 +82,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-amber-600',
       buttonBorder: 'border-amber-700',
       buttonHoverBg: 'hover:bg-amber-700',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#d97706', // amber-600
+      buttonHoverBgColor: '#b45309' // amber-700
     };
   }
   
@@ -93,7 +101,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-emerald-500',
       buttonBorder: 'border-emerald-600',
       buttonHoverBg: 'hover:bg-emerald-600',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#10b981', // emerald-500
+      buttonHoverBgColor: '#059669' // emerald-600
     };
   }
   
@@ -110,7 +120,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-stone-600',
       buttonBorder: 'border-stone-700',
       buttonHoverBg: 'hover:bg-stone-700',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#57534e', // stone-600
+      buttonHoverBgColor: '#44403c' // stone-700
     };
   }
   
@@ -127,7 +139,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-rose-500',
       buttonBorder: 'border-rose-600',
       buttonHoverBg: 'hover:bg-rose-600',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#f43f5e', // rose-500
+      buttonHoverBgColor: '#e11d48' // rose-600
     };
   }
   
@@ -144,7 +158,9 @@ export function getAgentTheme(name: string): AgentTheme {
       buttonBg: 'bg-orange-500',
       buttonBorder: 'border-orange-600',
       buttonHoverBg: 'hover:bg-orange-600',
-      buttonText: 'text-white'
+      buttonText: 'text-white',
+      buttonBgColor: '#f97316', // orange-500
+      buttonHoverBgColor: '#ea580c' // orange-600
     };
   }
   
@@ -160,6 +176,8 @@ export function getAgentTheme(name: string): AgentTheme {
     buttonBg: 'bg-dd-orange',
     buttonBorder: 'border-dd-dark',
     buttonHoverBg: 'hover:bg-dd-dark',
-    buttonText: 'text-white'
+    buttonText: 'text-white',
+    buttonBgColor: '#FF3008', // dd-orange
+    buttonHoverBgColor: '#191919' // dd-dark
   };
 }

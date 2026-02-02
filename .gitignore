@@ -42,6 +42,17 @@ Thumbs.db
 coverage
 .nyc_output
 
+# Python (for evaluation system)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
 # Misc
 *.tsbuildinfo
 .cache
+*.local

@@ -81,10 +81,19 @@ Food-Bidding-Agentic-App/
 │   ├── Tracking.tsx    # Order tracking
 │   └── ...
 ├── services/           # API services
-│   └── geminiService.ts  # Gemini API integration
+│   ├── geminiService.ts  # Gemini API integration
+│   └── linearService.ts   # Linear API integration
 ├── utils/              # Utility functions
 │   ├── agentThemes.ts  # Restaurant theme mapping
-│   └── bidHelpers.ts   # Bid processing helpers
+│   ├── bidHelpers.ts   # Bid processing helpers
+│   └── brandVoice.ts   # Brand voice utilities
+├── docs/               # Documentation
+│   ├── planning/       # Implementation plans
+│   ├── business/       # Business model docs
+│   ├── integration/    # Integration guides
+│   └── ...             # Other documentation
+├── evaluation/         # Evaluation system (separate)
+├── scripts/            # Utility scripts
 ├── types.ts            # TypeScript definitions
 ├── constants.ts        # App constants
 └── App.tsx             # Main app component
@@ -150,9 +159,12 @@ npm run test:gemini-key
 
 ## 📚 Documentation
 
-- [Code Review](./CODE-REVIEW.md) - Code review findings
-- [Business Model](./BUSINESS-MODEL-ELITE.md) - Business model analysis
-- [UX Enhancement Plan](./UX-ENHANCEMENT-PLAN.md) - UX improvements
+- [Code Review](./docs/CODE-REVIEW.md) - Code review findings
+- [Comprehensive Code Review](./docs/CODE-REVIEW-COMPREHENSIVE.md) - Full codebase review
+- [Business Model](./docs/business/BUSINESS-MODEL-ELITE.md) - Business model analysis
+- [Product Requirements](./PRD.md) - Product requirements document
+- [Planning Documents](./docs/planning/) - Implementation plans and UX enhancements
+- [Integration Guides](./docs/integration/) - Linear and other integrations
 
 ## 🤝 Contributing
 
