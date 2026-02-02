@@ -31,9 +31,13 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy env injection script
 COPY scripts/inject-env.js /usr/local/bin/inject-env.js
 
-# Create startup script
+# Create startup script with error handling
 RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
-    echo 'node /usr/local/bin/inject-env.js' >> /docker-entrypoint.sh && \
+    echo 'set -e' >> /docker-entrypoint.sh && \
+    echo 'echo "🚀 Starting container..."' >> /docker-entrypoint.sh && \
+    echo 'echo "📝 Running env injection script..."' >> /docker-entrypoint.sh && \
+    echo 'node /usr/local/bin/inject-env.js || { echo "❌ Env injection failed!"; exit 1; }' >> /docker-entrypoint.sh && \
+    echo 'echo "✅ Env injection complete, starting nginx..."' >> /docker-entrypoint.sh && \
     echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
 

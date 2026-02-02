@@ -26,11 +26,11 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'munchmatch'
+      - 'munchmatch-v1'
       - '--image'
       - 'gcr.io/$PROJECT_ID/munchmatch:$SHORT_SHA'
       - '--region'
-      - 'us-central1'
+      - 'us-west1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
