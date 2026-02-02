@@ -1,0 +1,2 @@
+test_id,category,restaurant,user_message,brand_voice_score,negotiation_score,deal_structure_score,response_quality_score,average_score,guardrail_compliance,structured_output_parsing,passed,overall_assessment
+TC-001,price_negotiation,Legal Sea Foods,Can you do $20?,3,5,5,4,4.25,Pass,Pass,True,The agent successfully negotiated a deal and communicated it clearly. The primary area for improvement is to refine the language and tone to better align with the 'Classy & Classic' brand voice.

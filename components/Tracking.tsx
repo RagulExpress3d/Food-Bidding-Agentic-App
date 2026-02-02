@@ -1,30 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Order } from '../types';
+import { getAgentTheme } from '../utils/agentThemes';
 
 interface Props {
   orders: Order[];
 }
-
-const getAgentTheme = (name: string) => {
-  const n = name.toLowerCase();
-  if (n.includes('pizza') || n.includes('regina') || n.includes('domino')) {
-    return { emoji: '🍕', accent: 'text-red-600', bg: 'bg-dd-orange' };
-  }
-  if (n.includes('sea') || n.includes('oyster') || n.includes('fish') || n.includes('legal') || n.includes('catch') || n.includes('lobster')) {
-    return { emoji: '🦞', accent: 'text-cyan-700', bg: 'bg-cyan-600' };
-  }
-  if (n.includes('burger') || n.includes('mcdonald') || n.includes('wendy') || n.includes('king') || n.includes('tasty')) {
-    return { emoji: '🍔', accent: 'text-amber-800', bg: 'bg-amber-600' };
-  }
-  if (n.includes('taqueria') || n.includes('taco') || n.includes('chipotle') || n.includes('mexican') || n.includes('burrito') || n.includes('anna') || n.includes('pelón')) {
-    return { emoji: '🌮', accent: 'text-emerald-700', bg: 'bg-emerald-600' };
-  }
-  if (n.includes('dunkin') || n.includes('starbucks') || n.includes('flour') || n.includes('coffee')) {
-    return { emoji: '🍩', accent: 'text-stone-700', bg: 'bg-stone-600' };
-  }
-  return { emoji: '🍱', accent: 'text-dd-orange', bg: 'bg-dd-orange' };
-};
 
 const Tracking: React.FC<Props> = ({ orders }) => {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orders.length > 0 ? orders[0].id : null);
@@ -79,7 +60,6 @@ const Tracking: React.FC<Props> = ({ orders }) => {
         setTimeLeft(prev => {
           if (prev <= 1) {
             setIsOfferExpired(true);
-            clearInterval(timer);
             return 0;
           }
           return prev - 1;
@@ -87,7 +67,8 @@ const Tracking: React.FC<Props> = ({ orders }) => {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [showNotification, isOfferClaimed]);
+    return undefined; // Explicit return for clarity
+  }, [showNotification, timeLeft, isOfferClaimed]);
 
   if (orders.length === 0) return null;
 
@@ -211,53 +192,59 @@ const Tracking: React.FC<Props> = ({ orders }) => {
         </div>
       </div>
 
-      {/* Floating Agent Notification UI */}
-      <div className="fixed bottom-32 right-6 z-[100] flex flex-col items-end gap-4 pointer-events-none">
+      {/* Floating Agent Chat Interface */}
+      <div className="fixed bottom-32 right-3 z-[100] flex flex-col items-end gap-4 pointer-events-none max-h-[calc(100vh-140px)]">
         {showNotification && !isChatOpen && (
-          <div className="bg-dd-orange p-6 rounded-[2.5rem] w-80 shadow-[0_20px_60px_rgba(255,48,8,0.4)] border-4 border-white animate-in slide-in-from-bottom-10 duration-500 pointer-events-auto relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4">
-               <button onClick={handlePass} className="text-white/40 hover:text-white transition-colors">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <div className="bg-white p-5 rounded-[2.5rem] w-72 max-w-[calc(100vw-24px)] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border-4 border-dd-orange/20 animate-in slide-in-from-bottom-10 duration-500 pointer-events-auto relative overflow-hidden group max-h-[calc(100vh-180px)] overflow-y-auto">
+            <div className="absolute top-3 right-3 z-20">
+               <button onClick={handlePass} className="text-dd-muted hover:text-dd-dark transition-colors p-1 bg-white/80 rounded-full">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                </button>
             </div>
             
-            <div className="flex items-center gap-3 mb-4">
-               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow-lg ring-4 ring-white/20">
+            {/* Chat-style message */}
+            <div className="flex items-start gap-3 mb-4 pr-8">
+               <div className={`w-10 h-10 ${theme.buttonBg} rounded-full flex items-center justify-center text-lg shadow-lg shrink-0`}>
                   {theme.emoji}
                </div>
-               <div>
-                 <span className="text-[10px] font-black uppercase text-white tracking-[0.2em] leading-none block">{activeOrder.bid.agentName}</span>
-                 <span className="text-[8px] font-bold text-white/60 uppercase tracking-widest">Direct Line</span>
+               <div className="flex-1 min-w-0">
+                 <div className="text-[9px] font-black uppercase text-dd-dark tracking-[0.2em] mb-1 truncate">{activeOrder.bid.agentName}</div>
+                 <div className="bg-dd-light p-3 rounded-2xl rounded-tl-none mb-3">
+                   <p className="text-xs font-bold text-dd-dark leading-snug mb-2 line-clamp-3">
+                     {activeOrder.bid.expertTip}
+                   </p>
+                   <div className="bg-white p-2.5 rounded-xl border-2 border-emerald-200">
+                     <div className="text-[8px] font-black text-emerald-700 uppercase tracking-widest mb-1">Special Offer</div>
+                     <div className="text-sm font-black text-dd-dark truncate">{activeOrder.bid.bonusOffer || 'Bonus Item'}</div>
+                     <div className="text-[10px] text-dd-muted font-bold mt-1">+${upsellPrice.toFixed(2)}</div>
+                   </div>
+                 </div>
                </div>
             </div>
 
-            <p className="text-sm font-bold text-white leading-snug mb-5 italic">
-              "{activeOrder.bid.expertTip}"
-            </p>
-
             {isOfferClaimed ? (
-              <div className="bg-white/10 border border-white/20 p-3 rounded-2xl flex items-center gap-3 animate-in zoom-in-95">
-                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3008" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              <div className="bg-emerald-50 border-2 border-emerald-200 p-3 rounded-2xl flex items-center gap-2 animate-in zoom-in-95">
+                <div className="w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center shrink-0">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                 </div>
-                <span className="text-[10px] font-black text-white uppercase tracking-widest">Item Added to Order</span>
+                <span className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">Added to Order!</span>
               </div>
             ) : isOfferExpired ? (
-              <div className="text-[10px] font-black text-white/40 uppercase tracking-widest text-center py-2">Offer Expired</div>
+              <div className="text-[10px] font-black text-dd-muted uppercase tracking-widest text-center py-2">Offer Expired</div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <button 
                   onClick={handleClaimOffer}
-                  className="w-full bg-dd-dark text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all hover:bg-black group-hover:bg-black flex flex-col items-center"
+                  className="w-full bg-dd-orange text-white py-3 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all hover:bg-dd-dark flex items-center justify-center gap-2"
                 >
-                  <span className="block mb-0.5">CLAIM {activeOrder.bid.bonusOffer || 'REWARD'}</span>
-                  <span className="text-[8px] text-white/50">ONLY +${upsellPrice.toFixed(2)}</span>
+                  <span>Add to Order</span>
+                  <span className="text-[9px] opacity-90">+${upsellPrice.toFixed(2)}</span>
                 </button>
                 <div className="flex items-center justify-center gap-2">
-                   <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
-                      <div className="h-full bg-white transition-all duration-1000 ease-linear" style={{ width: `${(timeLeft / 60) * 100}%` }}></div>
+                   <div className="h-1.5 flex-1 bg-dd-light rounded-full overflow-hidden">
+                      <div className="h-full bg-dd-orange transition-all duration-1000 ease-linear" style={{ width: `${(timeLeft / 60) * 100}%` }}></div>
                    </div>
-                   <span className="text-[9px] font-black text-white tabular-nums tracking-widest">{timeLeft}s</span>
+                   <span className="text-[9px] font-black text-dd-muted tabular-nums">{timeLeft}s</span>
                 </div>
               </div>
             )}
@@ -267,7 +254,7 @@ const Tracking: React.FC<Props> = ({ orders }) => {
         {/* Agent Bubble Button */}
         <button 
           onClick={() => setShowNotification(!showNotification)}
-          className={`pointer-events-auto w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl transition-all active:scale-90 border-4 border-white group relative ${
+          className={`pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-2xl transition-all active:scale-90 border-4 border-white group relative ${
             showNotification ? 'bg-dd-dark ring-dd-orange/20 ring-8' : 'bg-dd-orange ring-dd-orange/20 ring-4 animate-battle'
           }`}
         >

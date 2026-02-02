@@ -22,6 +22,7 @@ export interface Bid {
   statusTimeline: string[];
   expertTip: string;
   bonusOffer: string;
+  timestamp?: number; // Optional: timestamp when bid was created (for "New bid!" badges)
 }
 
 export interface Order {

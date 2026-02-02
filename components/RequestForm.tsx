@@ -26,7 +26,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
       <div className="space-y-6">
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
-            <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">The Objective</label>
+            <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">What do you want?</label>
             <input 
               type="text"
               className="w-full h-[58px] p-4 bg-dd-light border-2 border-transparent focus:border-dd-orange/20 focus:bg-white rounded-2xl outline-none font-bold text-sm transition-all placeholder:text-dd-muted/50"
@@ -36,7 +36,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest text-center">Squad Size</label>
+            <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest text-center">How many?</label>
             <div className="flex items-center justify-between bg-dd-light rounded-2xl h-[58px] px-1 overflow-hidden border-2 border-transparent focus-within:border-dd-orange/20 focus-within:bg-white transition-all">
               <button 
                 type="button"
@@ -60,7 +60,7 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Price</label>
+          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Max price per item</label>
           <div className="relative">
             <span className="absolute left-5 top-1/2 -translate-y-1/2 font-black text-dd-orange">$</span>
             <input 
@@ -73,18 +73,18 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Drop Frequency</label>
+          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">One-time or recurring?</label>
           <div className="grid grid-cols-4 gap-2">
             {[
-              { val: 'single', label: '1 Drop' },
-              { val: '7', label: '7 Days' },
-              { val: '14', label: '14 Days' },
-              { val: '30', label: '30 Days' }
+              { val: 'single', label: 'One-time' },
+              { val: '7', label: 'This week' },
+              { val: '14', label: '2 weeks' },
+              { val: '30', label: 'This month' }
             ].map(opt => (
               <button
                 key={opt.val}
                 type="button"
-                onClick={() => setFormData({ ...formData, duration: opt.val as any })}
+                onClick={() => setFormData({ ...formData, duration: opt.val as UserConstraints['duration'] })}
                 className={`p-3 rounded-xl text-[10px] font-black uppercase transition-all border-2 ${
                   formData.duration === opt.val 
                   ? 'bg-dd-orange border-dd-orange text-white shadow-xl shadow-dd-orange/20' 
@@ -95,10 +95,21 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
               </button>
             ))}
           </div>
+          <p className="text-[9px] text-dd-muted mt-2 font-bold">Perfect for weekly lunch plans</p>
+          {formData.duration !== 'single' && (
+            <p className="text-[9px] text-emerald-600 mt-1 font-bold italic">
+              Set your {formData.duration === '7' ? 'weekly' : formData.duration === '14' ? 'bi-weekly' : 'monthly'} plan. We'll find deals. You approve.
+            </p>
+          )}
+          {formData.duration === '7' && (
+            <p className="text-[9px] text-dd-muted mt-1 italic">5 for the week</p>
+          )}
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">Dietary Preferences</label>
+          <label className="block text-[10px] font-black uppercase text-dd-muted mb-2 tracking-widest">
+            Dietary Preferences <span className="text-[8px] font-normal normal-case">(optional)</span>
+          </label>
           <div className="flex flex-wrap gap-2">
             {dietaryOptions.map(tag => (
               <button
@@ -120,10 +131,11 @@ const RequestForm: React.FC<Props> = ({ initialData, onSubmit }) => {
 
       <button
         onClick={() => onSubmit(formData)}
-        className="w-full bg-dd-orange text-white p-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-dd-orange/20 flex items-center justify-center gap-3 active:scale-95 transition-all hover:bg-dd-dark"
+        className="w-full bg-dd-orange text-white p-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-dd-orange/20 flex items-center justify-center gap-3 active:scale-95 transition-all hover:bg-dd-dark animate-scale-in relative overflow-hidden group"
       >
-        <span>Initialize MunchMatch</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        <span className="relative z-10">See who wants your order</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        <div className="absolute inset-0 bg-white/20 scale-0 group-active:scale-100 transition-transform duration-200 rounded-2xl"></div>
       </button>
     </div>
   );

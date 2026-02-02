@@ -1,13 +1,13 @@
 ---
 name: create-issue
-description: Fast-capture issue creation for bugs, features, or improvements. Use when the user is mid-development and wants to log something quickly so they can keep working. Asks 2–3 targeted questions, optionally greps for files, then outputs one complete issue with title, TL;DR, current vs expected, files, risks, and labels.
+description: Fast-capture issue creation for bugs, features, or improvements. Creates Linear issues directly via MCP. Use when the user is mid-development and wants to log something quickly so they can keep working. Asks 2–3 targeted questions, optionally greps for files, then creates the issue in Linear and returns the issue URL.
 ---
 
-You help capture an issue quickly so the user can get back to coding. Your output is one complete issue (ticket), not implementation.
+You help capture an issue quickly and create it directly in Linear so the user can get back to coding. You create the Linear issue via MCP, not just text output.
 
-## Goal: one complete issue
+## Goal: create Linear issue
 
-Include:
+Gather:
 - **Title** — Clear, scannable (e.g. "Checkout doesn't apply discount code", "Add dark mode toggle")
 - **TL;DR** — One sentence: what this is about
 - **Current state vs expected outcome** — What happens now vs what should happen
@@ -15,7 +15,7 @@ Include:
 - **Risk/notes** — If applicable: dependencies, edge cases, rollout concerns
 - **Labels** — Type (bug / feature / improvement), Priority (low / normal / high / critical), Effort (small / medium / large)
 
-Use bullet points. No long paragraphs.
+Then create the issue in Linear using MCP tools and return the issue URL.
 
 ## How you get there
 
@@ -46,4 +46,35 @@ Use bullet points. No long paragraphs.
 - **Context** — Max 3 files in the issue; list only the most relevant.
 - **Format** — Bullet points over paragraphs.
 
-You do not implement the fix or feature. You only produce the issue text so the user can paste it into their tracker (GitHub, Linear, etc.) and continue working.
+## Creating the Linear Issue
+
+After gathering the information:
+
+1. **Format the description** using the structure from `services/linearService.ts` `formatIssueDescription()`:
+   - TL;DR section
+   - Current vs Expected section
+   - Relevant Files (if any)
+   - Risks/Notes (if any)
+   - Labels summary
+
+2. **Map priority** to Linear format:
+   - Use `mapPriorityToLinear()` from `services/linearService.ts` if needed
+   - Linear uses: 0=critical, 1=high, 2=normal, 3=low
+
+3. **Create issue via MCP**:
+   - Use `call_mcp_tool` with:
+     - `server: "linear"`
+     - `toolName: "create_issue"` (or check available tool names)
+     - `arguments`: `{ title, description, priority, teamId?, labelIds? }`
+   
+4. **Return the result**:
+   - If successful: "✅ Created Linear issue: [title]\n🔗 [issue URL]"
+   - If MCP not available: Fall back to formatted text output with note to configure Linear MCP
+
+## Error Handling
+
+- If Linear MCP is not configured: Output formatted issue text with instructions to set up Linear MCP (see `SETUP-LINEAR-MCP.md`)
+- If creation fails: Show error message and provide formatted text as fallback
+- Always be helpful and guide user to next steps
+
+You do not implement the fix or feature. You create the Linear issue so the user can track it and continue working.

@@ -1,39 +1,185 @@
-<img width="561" height="752" alt="image" src="https://github.com/user-attachments/assets/94f1667e-a92c-40d2-b52e-a5054ee95790" />
+# 🍔 MunchMatch: Reverse-Auction Food Delivery
 
+> Stop searching. Start winning. Let the feast find you.
 
-Try out here in live link : https://feastbid-boston-872747958244.us-west1.run.app/
+MunchMatch is an AI-driven food delivery marketplace that flips the traditional model on its head. Instead of browsing menus, you set your preferences and restaurants compete in real-time to win your order through reverse auctions.
 
-🍔 MunchMatch: The Reverse-Auction Food Delivery Protocol
-Stop searching. Start winning. Let the feast find you.
-MunchMatch is a high-octane, AI-driven food delivery marketplace localized for the Boston Arena. Built on the FeastBid Operating System, it flips the traditional delivery model on its head. Instead of you browsing endless menus, you state your Objective, and a fleet of Autonomous Brand Agents bid against each other in real-time to win your order.
+**Live Demo:** [Try it here](https://feastbid-boston-872747958244.us-west1.run.app/)
 
-🚀 The Core Flow
-The Objective: Set your target (e.g., "Street Tacos"), define your squad size, and lock in your price cap.
-The Match Room: Watch as Tier-1 National Giants (McDonald's, Chipotle) and Tier-2 Local Legends (Legal Sea Foods, Regina Pizzeria) generate competitive, mathematically viable bids.
-The Negotiation: Don't like the price? Jump into a direct chat with the restaurant’s AI Agent. Haggle for a better unit price, bundle in a 30-day subscription, or secure "secret menu" perks.
-The Plate: Confirm the deal through a secure mock-terminal and track your order via a high-fidelity logistics feed.
+![MunchMatch Preview](https://github.com/user-attachments/assets/94f1667e-a92c-40d2-b52e-a5054ee95790)
 
-🧠 The Agent Intelligence (FeastBid OS)
-- MunchMatch isn't just a UI; it's a simulation of restaurant economics. Each brand is represented by a unique Agent Logic Instance featuring:
-- Real-Time Bidding: Agents simulate web-scrapes of current Boston menu prices (including market-rate seafood) to ensure bids are competitive yet viable.
-- Brand Voice: Every interaction is flavored with the brand's personality—from Wendy’s legendary sass to the "OG" energy of the North End's Regina Pizzeria.
-- Subscription Moats: For long-term hunger, agents offer "Commuter Passes" and "Office Lunch Plans" that traditional apps can't match.
-- The Delight Engine: Post-checkout engagement where agents provide "Expert Tips" (e.g., "Reheat your pizza in a skillet, not the microwave!") to maximize Lifetime Value (LTV).
+## ✨ Features
 
-🛠 Technical Architecture
+### 🎯 Reverse Auction Model
+- **Set Your Terms**: Define what you want, quantity, and max price
+- **Live Bidding**: Watch restaurants compete in real-time with progressive bid streaming
+- **Price Discovery**: Save 15-30% vs traditional delivery apps like DoorDash
 
-- Framework: React 19 + TypeScript.
-- Styling: Tailwind CSS with a custom "Battle-Ready" UI/UX (High-contrast, mobile-first, and haptic-inspired).
-- Intelligence: Powered by Google Gemini API (using gemini-3-flash-preview for bidding and gemini-3-pro-preview for complex negotiations).
-- State Management: Lightweight, reactive state handling for real-time bidding simulations and logistics tracking.
-- Localization: Deep-linked Boston data—from Seaport seafood prices to Back Bay delivery ETAs.
+### 🤖 AI-Powered Agents
+- **Brand Agents**: Each restaurant has a unique AI agent with brand personality
+- **Smart Bidding**: Agents generate competitive bids based on Boston market pricing
+- **AI Negotiation**: Chat directly with restaurant agents to negotiate better deals
 
-## Run Locally
+### 🎨 Premium UX
+- **Apple/DoorDash Style Design**: Clean, modern interface with smooth animations
+- **Live Bid Animations**: Bids stream in progressively with real-time updates
+- **Food Images**: High-quality food photography for each restaurant
+- **Color-Coded Cards**: Visual themes based on food type (pizza=red, Mexican=green, etc.)
 
-**Prerequisites:**  Node.js
+### 💬 Interactive Negotiation
+- **Quick Prompts**: One-click negotiation suggestions ("Can you do $20?", "Add fries?")
+- **Snappy Responses**: High-energy agent interactions with emojis
+- **Deal Celebration**: Visual feedback when negotiations succeed
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 📦 Order Management
+- **Address Prefill**: Mock address for demos, localStorage persistence
+- **Order Tracking**: Real-time logistics feed with status updates
+- **Upsell Offers**: Interactive chat-based upsells during delivery
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- Google Gemini API key ([Get one here](https://aistudio.google.com/apikey))
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd Food-Bidding-Agentic-App
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+# Create .env or .env.local file
+echo "GEMINI_API_KEY=your_key_here" > .env
+
+# Run development server
+npm run dev
+```
+
+The app will be available at `http://localhost:3000`
+
+## 🛠 Tech Stack
+
+- **Framework**: React 19 + TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **AI**: Google Gemini API (gemini-2.5-flash for bids, gemini-3-flash for negotiations)
+- **Build Tool**: Vite
+- **State Management**: React Hooks (useState, useEffect, useMemo)
+
+## 📁 Project Structure
+
+```
+Food-Bidding-Agentic-App/
+├── components/          # React components
+│   ├── BidList.tsx     # Bid display with live streaming
+│   ├── NegotiationChat.tsx  # AI negotiation interface
+│   ├── Checkout.tsx    # Payment & address
+│   ├── Tracking.tsx    # Order tracking
+│   └── ...
+├── services/           # API services
+│   ├── geminiService.ts  # Gemini API integration
+│   └── linearService.ts   # Linear API integration
+├── utils/              # Utility functions
+│   ├── agentThemes.ts  # Restaurant theme mapping
+│   ├── bidHelpers.ts   # Bid processing helpers
+│   └── brandVoice.ts   # Brand voice utilities
+├── docs/               # Documentation
+│   ├── planning/       # Implementation plans
+│   ├── business/       # Business model docs
+│   ├── integration/    # Integration guides
+│   └── ...             # Other documentation
+├── evaluation/         # Evaluation system (separate)
+├── scripts/            # Utility scripts
+├── types.ts            # TypeScript definitions
+├── constants.ts        # App constants
+└── App.tsx             # Main app component
+```
+
+## 🎯 Key Components
+
+### BidList
+- Progressive bid streaming (1-2 second intervals)
+- Live bid counter and animations
+- Food images with restaurant logos
+- Color-coded cards by food type
+- DoorDash comparison badges
+
+### NegotiationChat
+- Quick prompt chips for fast negotiation
+- AI agent responses with brand personality
+- Real-time deal updates
+- Celebration animations
+
+### Checkout
+- Address prefilling (mock for demos)
+- localStorage persistence
+- Secure payment terminal UI
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` or `.env.local` file:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### API Models
+
+- **Bid Generation**: `gemini-2.5-flash` (fast, cost-effective)
+- **Negotiation**: `gemini-3-flash-preview` (snappy responses)
+
+## 📝 Development
+
+```bash
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Test Gemini API key
+npm run test:gemini-key
+```
+
+## 🎨 Design System
+
+- **Colors**: Custom DD (DoorDash-inspired) color palette
+- **Typography**: System fonts with custom tracking
+- **Animations**: CSS keyframes with reduced motion support
+- **Responsive**: Mobile-first design, max-width container
+
+## 📚 Documentation
+
+- [Code Review](./docs/CODE-REVIEW.md) - Code review findings
+- [Comprehensive Code Review](./docs/CODE-REVIEW-COMPREHENSIVE.md) - Full codebase review
+- [Business Model](./docs/business/BUSINESS-MODEL-ELITE.md) - Business model analysis
+- [Product Requirements](./PRD.md) - Product requirements document
+- [Planning Documents](./docs/planning/) - Implementation plans and UX enhancements
+- [Integration Guides](./docs/integration/) - Linear and other integrations
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 🙏 Acknowledgments
+
+- Google Gemini API for AI capabilities
+- Unsplash for food images
+- Design inspiration from Apple and DoorDash UX patterns
