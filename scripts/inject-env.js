@@ -9,8 +9,9 @@ const path = require('path');
 
 const htmlPath = '/usr/share/nginx/html/index.html';
 
-// Check for GEMINI_API_KEY first, then fallback to API_KEY (Cloud Run might use either)
-const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+// Read GEMINI_API_KEY from Cloud Run environment variables
+// Supports both GEMINI_API_KEY (standard) and VITE_GEMINI_API_KEY (for compatibility)
+const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '';
 
 const envVars = {
   GEMINI_API_KEY: apiKey,
@@ -18,12 +19,9 @@ const envVars = {
 
 console.log('🔧 Injecting environment variables...');
 console.log('GEMINI_API_KEY env var present:', !!process.env.GEMINI_API_KEY);
-console.log('API_KEY env var present:', !!process.env.API_KEY);
-console.log('Using API key from:', process.env.GEMINI_API_KEY ? 'GEMINI_API_KEY' : (process.env.API_KEY ? 'API_KEY' : 'NONE'));
-console.log('GEMINI_API_KEY length:', apiKey ? apiKey.length : 0);
-console.log('GEMINI_API_KEY starts with:', apiKey ? apiKey.substring(0, 10) + '...' : 'N/A');
+console.log('VITE_GEMINI_API_KEY env var present:', !!process.env.VITE_GEMINI_API_KEY);
+console.log('Using API key from:', process.env.GEMINI_API_KEY ? 'GEMINI_API_KEY' : (process.env.VITE_GEMINI_API_KEY ? 'VITE_GEMINI_API_KEY' : 'NONE'));
 console.log('HTML path:', htmlPath);
-console.log('All env vars:', Object.keys(process.env).filter(k => k.includes('GEMINI') || k.includes('API')));
 
 if (fs.existsSync(htmlPath)) {
   let html = fs.readFileSync(htmlPath, 'utf8');
@@ -73,15 +71,12 @@ if (fs.existsSync(htmlPath)) {
   }
   
   if (envVars.GEMINI_API_KEY) {
-    console.log('✅ GEMINI_API_KEY: Set (' + envVars.GEMINI_API_KEY.substring(0, 10) + '...)');
-    console.log('✅ GEMINI_API_KEY length:', envVars.GEMINI_API_KEY.length);
-    console.log('✅ Source:', process.env.GEMINI_API_KEY ? 'GEMINI_API_KEY env var' : 'API_KEY env var');
+    console.log('✅ GEMINI_API_KEY: Set');
+    console.log('✅ Source:', process.env.GEMINI_API_KEY ? 'GEMINI_API_KEY' : 'VITE_GEMINI_API_KEY');
   } else {
     console.error('❌ GEMINI_API_KEY: NOT SET');
     console.error('❌ GEMINI_API_KEY env var:', process.env.GEMINI_API_KEY ? 'present' : 'missing');
-    console.error('❌ API_KEY env var:', process.env.API_KEY ? 'present' : 'missing');
-    console.error('❌ Available env vars:', Object.keys(process.env).filter(k => k.includes('GEMINI') || k.includes('API')));
-    console.error('❌ All env vars:', Object.keys(process.env).join(', '));
+    console.error('❌ VITE_GEMINI_API_KEY env var:', process.env.VITE_GEMINI_API_KEY ? 'present' : 'missing');
     console.error('❌ This will cause API key errors!');
   }
 } else {
