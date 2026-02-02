@@ -5,22 +5,40 @@ import { TIER_1_AGENTS, BOSTON_20_AGENTS } from "../constants";
 const getApiKey = (): string => {
   // Runtime: Read from window.__ENV__ (injected by Cloud Run)
   // Development: Read from process.env (Vite)
+  // Check window.__ENV__ first (runtime injection)
   const runtimeKey = (typeof window !== 'undefined' && (window as any).__ENV__?.GEMINI_API_KEY) || '';
+  // Fallback to process.env (build-time, Vite)
   const buildTimeKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
-  return (runtimeKey || buildTimeKey).trim();
+  const key = (runtimeKey || buildTimeKey).trim();
+  
+  // Debug logging in development
+  if (process.env.NODE_ENV === 'development' && !key) {
+    console.warn('⚠️ API Key not found:', {
+      hasWindow: typeof window !== 'undefined',
+      hasWindowEnv: typeof window !== 'undefined' && !!(window as any).__ENV__,
+      windowEnvKeys: typeof window !== 'undefined' && (window as any).__ENV__ ? Object.keys((window as any).__ENV__) : [],
+      hasProcessEnv: !!process.env.GEMINI_API_KEY || !!process.env.API_KEY
+    });
+  }
+  
+  return key;
 };
 
 let ai: GoogleGenAI | null = null;
 function getClient(): GoogleGenAI {
+  // Always get fresh API key (don't cache the key check)
+  const key = getApiKey();
+  if (!key) {
+    throw new Error(
+      'GEMINI_API_KEY is not set. Add it to a .env or .env.local file (dev) or Cloud Run secrets (prod). Get a key at https://aistudio.google.com/apikey'
+    );
+  }
+  
+  // Only create new client if we don't have one or if key changed
   if (!ai) {
-    const key = getApiKey();
-    if (!key) {
-      throw new Error(
-        'GEMINI_API_KEY is not set. Add it to a .env or .env.local file (see .env.example). Get a key at https://aistudio.google.com/apikey'
-      );
-    }
     ai = new GoogleGenAI({ apiKey: key });
   }
+  
   return ai;
 }
 

@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script>
     // Placeholder for runtime injection - will be replaced by inject-env.js
+    // This ensures window.__ENV__ exists before React loads
     window.__ENV__ = window.__ENV__ || {};
   </script>
 </head>
@@ -14,6 +15,13 @@
   <div id="root">
     <p style="padding: 2rem; font-family: sans-serif; color: #191919;">Loading MunchMatch…</p>
   </div>
+  <!-- Ensure window.__ENV__ is available before React loads -->
+  <script>
+    // Double-check that window.__ENV__ is set (fallback if injection didn't work)
+    if (!window.__ENV__ || !window.__ENV__.GEMINI_API_KEY) {
+      console.warn('⚠️ window.__ENV__ not set - API calls may fail');
+    }
+  </script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
