@@ -1,112 +1,71 @@
-# Evaluation Framework - Getting Started Guide
+# Evaluation Framework
 
-## What We're Building
+AI testing system for evaluating negotiation chat agent performance using LLM-as-a-Judge methodology.
 
-We're creating an **AI testing system** to evaluate how well our negotiation chat agents perform. Think of it like a test suite for code, but for AI agents.
+## Overview
+
+This evaluation system tests how well our negotiation chat agents perform across various scenarios including:
+- Price negotiation
+- Quantity negotiation
+- Brand voice consistency
+- Prompt injection resistance
+- Edge case handling
 
 ## Key Concepts
 
-### 1. Test Cases
-A **test case** is a scenario we want to test. For example:
-- "Customer asks for 10% off - does the agent respond correctly?"
-- "Customer asks for 2x quantity - does agent offer bulk pricing?"
-
-### 2. Expected Behavior
-Instead of expecting exact responses (AI is unpredictable), we define **expected behaviors**:
-- Price should be in range $20-22
-- Response should maintain brand voice
-- Deal structure should be correct
-
-### 3. LLM-as-a-Judge
-We use **another AI** (GPT-4 or Claude) to evaluate our agent's responses. This AI acts as a "judge" scoring:
+### LLM-as-a-Judge
+We use another AI (Gemini, GPT-4, or Claude) to evaluate our agent's responses, scoring:
 - Brand voice consistency (1-5)
 - Negotiation effectiveness (1-5)
 - Deal structure quality (1-5)
 - Response quality (1-5)
 
-### 4. Human-in-the-Loop
-Humans review a sample (10-20%) of test cases to:
-- Catch edge cases AI judge misses
-- Calibrate the AI judge
-- Provide qualitative feedback
+### Test Cases
+Test cases are defined in `test_cases.json` (converted from `test_cases_template.csv`). Each test case includes:
+- Scenario description
+- Expected behavior ranges
+- Success criteria
 
-## Step-by-Step Process
+## Running Evaluations
 
-### Step 1: Fill Out Test Cases Template ✅ (You're here!)
-Use `test_cases_template.csv` to create your test scenarios.
+### Prerequisites
+1. Python 3.9+
+2. API keys in `.env` file (see `.env.example`)
+3. Dependencies installed: `pip install -r requirements.txt`
 
-**Columns Explained:**
-- `test_id`: Unique identifier (TC-001, TC-002, etc.)
-- `category`: Type of test (price_negotiation, quantity_negotiation, brand_voice, etc.)
-- `restaurant_name`: Which restaurant agent to test
-- `brand_voice`: Expected brand personality
-- `initial_price`: Starting bid price
-- `initial_quantity`: Starting quantity
-- `initial_offer`: What's being sold
-- `user_message`: What customer says (the test input)
-- `expected_price_range_min/max`: Acceptable price range
-- `expected_quantity_range_min/max`: Acceptable quantity range
-- `expected_response_characteristics`: What to look for in response
-- `expected_deal_updates`: What [NEW_PRICE], [NEW_QUANTITY], [NEW_OFFER] should look like
-- `success_criteria`: How we know it passed
-- `notes`: Additional context
+### Quick Start
 
-### Step 2: Convert CSV to JSON
-We'll convert your CSV into a structured JSON format the evaluation system can use.
+```bash
+# Convert CSV to JSON (if needed)
+python convert_csv_to_json.py
 
-### Step 3: Build LLM Judge
-Create the AI judge that evaluates agent responses.
+# Run full evaluation
+python run_evaluation.py
 
-### Step 4: Run Evaluations
-Execute test cases and collect scores.
+# Test judge system only
+python test_judge.py
+```
 
-### Step 5: Human Review
-Review flagged cases and calibrate the judge.
+## Results
 
-## How to Fill Out the Template
+Evaluation results are saved to `results/` directory as CSV files:
+- `results_full_TIMESTAMP.csv` - Complete detailed results
+- `results_summary_TIMESTAMP.csv` - Summary statistics
 
-1. **Start with common scenarios** (price negotiation, quantity requests)
-2. **Add edge cases** (extreme prices, invalid inputs)
-3. **Test different restaurants** (to verify brand voice consistency)
-4. **Think about failure modes** (what could go wrong?)
+## Documentation
 
-## Example Test Case Breakdown
+### Final Results
+- **[FINAL_RESULTS_SUMMARY.md](./FINAL_RESULTS_SUMMARY.md)** - Complete evaluation results and test case outcomes
+- **[SAFETY_ANALYSIS_REPORT.md](./SAFETY_ANALYSIS_REPORT.md)** - Security and guardrail testing results
 
-**Test Case TC-001:**
-- **Scenario**: Legal Sea Foods, customer asks for $20 (down from $24.95)
-- **Expected**: Agent offers $20-22 (reasonable discount), maintains professional tone
-- **Why**: Tests price negotiation + brand voice consistency
+### System Documentation
+- **[judge/README.md](./judge/README.md)** - Judge evaluation system documentation
+- **[results/README.md](./results/README.md)** - Results format documentation
 
-**Test Case TC-006:**
-- **Scenario**: Customer asks for $5 (extreme lowball)
-- **Expected**: Agent politely declines, explains why
-- **Why**: Tests edge case handling, boundary conditions
+## Key Files
 
-## Questions to Consider
-
-Before filling out test cases, think about:
-
-1. **What are the most common customer requests?**
-   - Price discounts?
-   - Quantity increases?
-   - Add-ons?
-
-2. **What could go wrong?**
-   - Agent gives too much discount?
-   - Agent loses brand voice?
-   - Agent doesn't parse deal updates correctly?
-
-3. **What restaurants should we prioritize?**
-   - Different price tiers (Value vs Premium)?
-   - Different brand voices (Energetic vs Classy)?
-
-4. **What edge cases matter?**
-   - Extreme price requests?
-   - Off-topic messages?
-   - Multi-turn negotiations?
-
-## Next Steps
-
-1. Fill out `test_cases_template.csv` with 20-30 test cases
-2. We'll review together and refine
-3. Then we'll build the evaluation system
+- `run_evaluation.py` - Main evaluation pipeline
+- `agent_simulator.py` - Simulates negotiation chat agent
+- `test_judge.py` - Tests judge system
+- `test_cases.json` - Test case definitions
+- `judge/evaluator.py` - LLM judge implementation

@@ -1,42 +1,52 @@
-# Documentation Index
+# MunchMatch Documentation
 
-This directory contains all project documentation organized by category.
+Essential documentation for the MunchMatch reverse-auction food delivery platform.
 
-## 📋 Quick Links
+## 📋 Documentation Structure
 
-### Code & Reviews
-- [Code Review](./CODE-REVIEW.md) - Initial code review findings
-- [Comprehensive Code Review](./CODE-REVIEW-COMPREHENSIVE.md) - Full codebase review and structure analysis
+### Product Documentation
+- **[Product Requirements Document](../PRD.md)** - Complete product specification, features, and technical requirements
+- **[Main README](../README.md)** - Project overview, quick start guide, and setup instructions
 
-### Planning Documents
-See [planning/](./planning/) for:
-- Implementation plans
-- UX enhancement plans
-- Feature planning documents
+### Business Documentation
+- **[Business Model](./business/BUSINESS-MODEL.md)** - Core business model, unit economics, customer personas, and go-to-market strategy
+- **[Amazon PM Analysis](./business/AMAZON-PM-ANALYSIS.md)** - Product management analysis and strategic recommendations
 
-### Business Documents
-See [business/](./business/) for:
-- Business model analysis
-- PM analysis documents
+### Evaluation & Testing
+- **[AI Testing & Evaluation Plan](./AI-TESTING-EVALUATION-PLAN.md)** - Comprehensive evaluation strategy, test case design, and LLM-as-a-Judge methodology
+- **[Evaluation System README](../evaluation/README.md)** - Evaluation framework overview and getting started guide
+- **[Final Results Summary](../evaluation/FINAL_RESULTS_SUMMARY.md)** - Complete evaluation results and test case outcomes
+- **[Safety Analysis Report](../evaluation/SAFETY_ANALYSIS_REPORT.md)** - Security and guardrail testing results
 
-### Integration Guides
-See [integration/](./integration/) for:
-- Linear integration setup and status
-- API integration guides
+## 🎯 Key Documents
 
-### Other Documentation
-- [GitHub Setup](./GITHUB-EXPLAINER.md) - GitHub repository setup guide
-- [Guardrail Fixes](./GUARDRAIL_FIXES_IMPLEMENTED.md) - Security guardrail implementation
-- [Initial Ideas](./INITIAL-IDEAS.md) - Project ideation documents
-- [Wrap Up Summary](./WRAP_UP_SUMMARY.md) - Project summary
-- [AI Testing Plan](./AI-TESTING-EVALUATION-PLAN.md) - Evaluation system planning
+### For Product Understanding
+1. Start with **[PRD.md](../PRD.md)** for complete product specification
+2. Review **[Business Model](./business/BUSINESS-MODEL.md)** for market strategy
+3. Check **[Evaluation Plan](./AI-TESTING-EVALUATION-PLAN.md)** for quality assurance approach
 
-## 📁 Directory Structure
+### For Business Strategy
+- **[Business Model](./business/BUSINESS-MODEL.md)** - Unit economics, customer personas, revenue model
+- **[Amazon PM Analysis](./business/AMAZON-PM-ANALYSIS.md)** - Strategic product management insights
 
-```
-docs/
-├── planning/        # Implementation and feature plans
-├── business/        # Business model and analysis
-├── integration/     # Integration guides
-└── [other docs]     # Miscellaneous documentation
-```
+### For Evaluation & Testing
+- **[AI Testing Plan](./AI-TESTING-EVALUATION-PLAN.md)** - Evaluation methodology and test case design
+- **[Final Results](../evaluation/FINAL_RESULTS_SUMMARY.md)** - Complete test results and performance metrics
+- **[Safety Analysis](../evaluation/SAFETY_ANALYSIS_REPORT.md)** - Security testing and guardrail compliance
+
+## 📊 Evaluation Results Summary
+
+**Overall Performance:**
+- 20 test cases executed
+- 60% pass rate (12/20)
+- Average score: 3.8/5.0
+- Guardrail compliance: 75%
+
+See **[Final Results Summary](../evaluation/FINAL_RESULTS_SUMMARY.md)** for detailed breakdown.
+
+## 🔗 Quick Links
+
+- **Product**: [PRD.md](../PRD.md)
+- **Business**: [Business Model](./business/BUSINESS-MODEL.md)
+- **Evaluation**: [AI Testing Plan](./AI-TESTING-EVALUATION-PLAN.md)
+- **Results**: [Final Results](../evaluation/FINAL_RESULTS_SUMMARY.md)
